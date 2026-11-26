@@ -1,20 +1,39 @@
 @import "tailwindcss";
 
-:root {
-  --bg-daylight: #f6f9fc;
-  --bg-card: #ffffff;
-  --ink-navy: #0f172a;
-  --accent-cobalt: #2563eb;
-  --accent-teal: #0d9488;
-  --accent-rose: #e11d48;
+:root,
+[data-comfort="dusk"] {
+  --bg-page: #181e1c;
+  --bg-card: #212926;
+  --bg-card-alt: #1c2320;
+  --border-soft: #313e39;
+  --ink-main: #e6e2d8;
+  --ink-muted: #9ab0a5;
+  --accent-sage: #6ba38b;
+  --accent-sage-soft: rgba(107, 163, 139, 0.16);
+  --accent-amber: #d4956a;
+  --accent-amber-soft: rgba(212, 149, 106, 0.16);
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
 }
 
+[data-comfort="sand"] {
+  --bg-page: #eae4d7;
+  --bg-card: #f2ede2;
+  --bg-card-alt: #e4ddd0;
+  --border-soft: #d2cbb9;
+  --ink-main: #222926;
+  --ink-muted: #5a6660;
+  --accent-sage: #3d755d;
+  --accent-sage-soft: rgba(61, 117, 93, 0.14);
+  --accent-amber: #b45309;
+  --accent-amber-soft: rgba(180, 83, 9, 0.12);
+}
+
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-daylight);
-  color: var(--ink-navy);
+  background-color: var(--bg-page);
+  color: var(--ink-main);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .font-ritim-mono {
@@ -23,12 +42,12 @@ body {
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.18);
-  color: #0f172a;
+  background: rgba(107, 163, 139, 0.28);
+  color: var(--ink-main);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-cobalt);
+  outline: 2px solid var(--accent-sage);
   outline-offset: 2px;
 }
 
