@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RitimGünlüğü</string>
+    <string name="title_activity_main">RitimGünlüğü</string>
+    <string name="package_name">com.ritimgunlugu.app</string>
+    <string name="custom_url_scheme">com.ritimgunlugu.app</string>
+</resources>

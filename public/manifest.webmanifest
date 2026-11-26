@@ -1,0 +1,16 @@
+{
+  "name": "RitimGünlüğü — Enerji & Semptom Korelasyonu",
+  "short_name": "RitimGünlüğü",
+  "description": "10 saniyede uyku, kafein, stres ve semptom takibi yaparak kişisel tetikleyicilerini keşfet.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F6F5FF",
+  "theme_color": "#3730A3",
+  "icons": [
+    {
+      "src": "store-assets/ritimgunlugu_icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}
