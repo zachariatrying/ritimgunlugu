@@ -985,9 +985,23 @@ export default function App() {
               </div>
             )}
 
-            <p className="text-[11px] text-center" style={{ color: 'var(--ink-muted)' }}>
-              RitimGünlüğü kişisel farkındalık aracıdır, tıbbi tanı yerine geçmez. Tüm veriler yalnızca cihazınızda saklanır.
-            </p>
+            <div className="text-[11px] text-center space-y-1.5" style={{ color: 'var(--ink-muted)' }}>
+              <p>
+                RitimGünlüğü tıbbi cihaz değildir (1219 sayılı Kanun &amp; TİTCK kapsamında tanı/tedavi sunmaz). Şiddetli,
+                ani veya alışılmadık baş ağrılarında <strong>112 Acil</strong>&rsquo;e başvurun.
+              </p>
+              <p className="flex flex-wrap justify-center gap-3">
+                <a href="https://ichd-3.org/" target="_blank" rel="noopener noreferrer" className="underline">
+                  IHS (ICHD-3)
+                </a>
+                <a href="https://www.noroloji.org.tr/" target="_blank" rel="noopener noreferrer" className="underline">
+                  Türk Nöroloji Derneği
+                </a>
+                <a href="./privacy.html" className="underline font-semibold" style={{ color: 'var(--accent-sage)' }}>
+                  Gizlilik &amp; KVKK
+                </a>
+              </p>
+            </div>
           </div>
         )}
       </main>
