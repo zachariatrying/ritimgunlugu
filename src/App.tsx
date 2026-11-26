@@ -7,6 +7,7 @@ import {
   Copy,
   Download,
   FileText,
+  Lightbulb,
   Moon,
   Shield,
   Sparkles,
@@ -164,48 +165,39 @@ export default function App() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.fillStyle = '#12101B';
+    ctx.fillStyle = '#F6F9FC';
     ctx.fillRect(0, 0, 1080, 1350);
-    ctx.fillStyle = '#F2C166';
-    ctx.fillRect(0, 0, 1080, 14);
+    ctx.fillStyle = '#2563EB';
+    ctx.fillRect(0, 0, 1080, 18);
 
-    ctx.fillStyle = '#A69FB8';
+    ctx.fillStyle = '#2563EB';
     ctx.font = 'bold 26px system-ui, sans-serif';
-    ctx.fillText('RİTİMGÜNLÜĞÜ · GECE GÖZLEM ÖZETİ', 72, 100);
+    ctx.fillText('RİTİMGÜNLÜĞÜ · SEBEP-SONUÇ ANALİZİM', 72, 100);
 
-    ctx.fillStyle = '#F3EEE6';
-    ctx.font = 'bold 56px Georgia, serif';
-    ctx.fillText(`${sorted.length} Günlük Vücut Ritimim`, 72, 190);
-
-    [
-      { label: 'ORTALAMA UYKU', val: `${avgSleep} sa` },
-      { label: 'ENERJİ ORT.', val: `${avgEnergy} / 10` },
-      { label: 'BAŞ AĞRISI', val: `${headacheDays} gün` },
-    ].forEach((c, idx) => {
-      const x = 72 + idx * 320;
-      ctx.fillStyle = '#1B1829';
-      ctx.fillRect(x, 260, 296, 160);
-      ctx.fillStyle = '#F2C166';
-      ctx.font = 'bold 20px system-ui, sans-serif';
-      ctx.fillText(c.label, x + 26, 315);
-      ctx.fillStyle = '#F3EEE6';
-      ctx.font = 'bold 48px system-ui, sans-serif';
-      ctx.fillText(c.val, x + 26, 385);
-    });
+    ctx.fillStyle = '#0F172A';
+    ctx.font = 'bold 54px system-ui, sans-serif';
+    ctx.fillText(`${sorted.length} Günlük Vücut Ritimim`, 72, 185);
 
     insights.slice(0, 4).forEach((ins, idx) => {
-      const y = 470 + idx * 165;
-      ctx.fillStyle = '#1B1829';
-      ctx.fillRect(72, y, 936, 135);
-      ctx.fillStyle = ins.direction === 'risk' ? '#FDA4AF' : '#6EE7B7';
+      const y = 260 + idx * 230;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(72, y, 936, 196);
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(72, y, 936, 196);
+
+      ctx.fillStyle = ins.direction === 'risk' ? '#E11D48' : '#0D9488';
       ctx.font = 'bold 28px system-ui, sans-serif';
-      ctx.fillText(`${ins.factorLabel} → ${ins.outcomeLabel}`, 104, y + 52);
-      ctx.fillStyle = '#F3EEE6';
-      ctx.font = '24px system-ui, sans-serif';
-      ctx.fillText(ins.impactText, 104, y + 98);
+      ctx.fillText(`${ins.factorLabel} → ${ins.outcomeLabel}`, 108, y + 54);
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 26px system-ui, sans-serif';
+      ctx.fillText(ins.impactText, 108, y + 102);
+      ctx.fillStyle = '#475569';
+      ctx.font = '22px system-ui, sans-serif';
+      ctx.fillText(ins.actionTip.slice(0, 68), 108, y + 150);
     });
 
-    ctx.fillStyle = '#A69FB8';
+    ctx.fillStyle = '#475569';
     ctx.font = '22px monospace';
     ctx.fillText('zachariatrying.github.io/ritimgunlugu · %100 Cihaz İçi', 72, 1265);
 
@@ -216,222 +208,237 @@ export default function App() {
     showToast('1080×1350 Ritim Kartı PNG indirildi!');
   };
 
-  const leadInsight = insights[0];
-
-  const navItems: { id: Tab; label: string; icon: typeof Sparkles }[] = [
-    { id: 'correlations', label: 'Gözlem', icon: Sparkles },
-    { id: 'log', label: '10 sn Kayıt', icon: Coffee },
-    { id: 'trends', label: 'Eğriler', icon: TrendingUp },
-    { id: 'doctor', label: 'Hekim', icon: FileText },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#12101B] text-[#F3EEE6] flex flex-col lg:flex-row pb-24 lg:pb-0">
-      {/* Desktop Left Vertical Observatory Rail */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:justify-between border-r border-[#2C2644] bg-[#161322] p-6 shrink-0">
-        <div className="space-y-8">
+    <div className="min-h-screen bg-[#F6F9FC] text-[#0F172A] pb-20">
+      {/* Clean Daylight Wellness Header */}
+      <header className="bg-white border-b border-slate-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <img
               src={`${import.meta.env.BASE_URL}store-assets/ritimgunlugu_icon.png`}
               alt="RitimGünlüğü"
-              className="w-10 h-10 rounded-xl border border-[#2C2644]"
+              className="w-10 h-10 rounded-xl border border-slate-200 object-cover"
             />
             <div>
-              <h1 className="font-dusk-serif text-xl font-bold leading-none">RitimGünlüğü</h1>
-              <span className="font-dusk-mono text-[11px] text-[#A69FB8]">Dusk Observatory</span>
+              <h1 className="text-xl font-extrabold text-[#0F172A] leading-none">RitimGünlüğü</h1>
+              <p className="text-xs text-slate-500 mt-1">
+                Baş ağrısı, odak düşüşü ve yorgunluğun günlük alışkanlıklarınla ilişkisini keşfet
+              </p>
             </div>
           </div>
-
-          <nav className="space-y-1.5">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = tab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition cursor-pointer ${
-                    active
-                      ? 'bg-[#2A2442] text-[#F2C166]'
-                      : 'text-[#A69FB8] hover:text-[#F3EEE6] hover:bg-[#1E1A30]'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Compact Readouts */}
-          <div className="border-t border-[#2C2644] pt-5 space-y-3 font-dusk-mono text-xs">
-            <div className="flex justify-between">
-              <span className="text-[#A69FB8] flex items-center gap-1.5"><Moon className="w-3.5 h-3.5" /> Ort. Uyku</span>
-              <span className="text-[#F3EEE6] font-semibold">{avgSleep} sa</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-[#A69FB8] flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" /> Ort. Enerji</span>
-              <span className="text-[#F2C166] font-semibold">{avgEnergy}/10</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-[#A69FB8]">Baş Ağrısı</span>
-              <span className="text-[#FDA4AF] font-semibold">{headacheDays}/{sorted.length} g</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={downloadStoryPng}
+              className="px-3.5 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold flex items-center gap-1.5 hover:bg-blue-700 cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" /> Ritim Kartı PNG
+            </button>
+            <button
+              onClick={() => {
+                setDeleteStep(0);
+                setKvkkOpen(true);
+              }}
+              className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 cursor-pointer"
+              title="KVKK & Veri Kontrolü"
+            >
+              <Shield className="w-4 h-4" />
+            </button>
           </div>
         </div>
-
-        <div className="space-y-2 pt-6 border-t border-[#2C2644]">
-          <button
-            onClick={downloadStoryPng}
-            className="w-full py-2.5 px-3 rounded-xl bg-[#F2C166] text-[#12101B] text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" /> Ritim Kartı PNG
-          </button>
-          <button
-            onClick={() => {
-              setDeleteStep(0);
-              setKvkkOpen(true);
-            }}
-            className="w-full py-2 px-3 rounded-xl border border-[#2C2644] text-[#A69FB8] hover:text-white text-xs flex items-center justify-center gap-1.5 cursor-pointer"
-          >
-            <Shield className="w-3.5 h-3.5" /> KVKK &amp; Yedek
-          </button>
-        </div>
-      </aside>
-
-      {/* Mobile Compact Top Strip */}
-      <div className="lg:hidden px-4 pt-4 pb-2 flex items-center justify-between border-b border-[#2C2644]">
-        <div className="flex items-center gap-2.5">
-          <img
-            src={`${import.meta.env.BASE_URL}store-assets/ritimgunlugu_icon.png`}
-            alt="RitimGünlüğü"
-            className="w-8 h-8 rounded-lg border border-[#2C2644]"
-          />
-          <h1 className="font-dusk-serif text-lg font-bold">RitimGünlüğü</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={downloadStoryPng} className="px-2.5 py-1.5 rounded-lg bg-[#F2C166] text-[#12101B] text-xs font-bold cursor-pointer">
-            Kart
-          </button>
-          <button onClick={() => setKvkkOpen(true)} className="p-2 rounded-lg border border-[#2C2644] text-[#A69FB8] cursor-pointer">
-            <Shield className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+      </header>
 
       {toast && (
-        <div className="fixed top-4 right-4 z-50 bg-[#F2C166] text-[#12101B] px-4 py-2 rounded-full text-xs font-bold shadow-lg">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-lg">
           {toast}
         </div>
       )}
 
-      {/* Main Content Canvas */}
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-8 py-6 sm:py-8 space-y-6">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+        {/* 3-Step Self-Explanatory Guide Strip */}
+        <section className="grid sm:grid-cols-3 gap-3 bg-white border border-slate-200 rounded-2xl p-4">
+          <div className="flex items-start gap-2.5">
+            <span className="w-6 h-6 rounded-full bg-blue-100 text-[#2563EB] font-bold text-xs flex items-center justify-center shrink-0">1</span>
+            <div className="text-xs">
+              <div className="font-bold text-slate-900">10 Saniyede İşaretle</div>
+              <p className="text-slate-500 mt-0.5">Uyku saati, kahve, su ve varsa baş ağrısı/yorgunluğunu gir.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5">
+            <span className="w-6 h-6 rounded-full bg-teal-100 text-[#0D9488] font-bold text-xs flex items-center justify-center shrink-0">2</span>
+            <div className="text-xs">
+              <div className="font-bold text-slate-900">Sebep–Sonuç Karşılaştır</div>
+              <p className="text-slate-500 mt-0.5">Motor, alışkanlığın olduğu günlerle olmadığı günlerin yüzdesini kıyaslar.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5">
+            <span className="w-6 h-6 rounded-full bg-rose-100 text-[#E11D48] font-bold text-xs flex items-center justify-center shrink-0">3</span>
+            <div className="text-xs">
+              <div className="font-bold text-slate-900">Hekim Özeti Çıkar</div>
+              <p className="text-slate-500 mt-0.5">Randevuda paylaşabileceğin 14 günlük net özet al.</p>
+            </div>
+          </div>
+        </section>
+
         {hasDemo && (
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#A69FB8] border-b border-[#2C2644] pb-3">
-            <span>Örnek 14 günlük ritim verisi aktif — kendi günlerini ekleyebilirsin.</span>
-            <button onClick={clearOnlyDemo} className="text-[#F2C166] underline cursor-pointer">
-              Örneği Temizle
+          <div className="flex flex-wrap items-center justify-between gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-2.5 text-xs text-blue-900">
+            <span>
+              <strong>Örnek 14 Günlük Ritim Verisi</strong> yüklü — sebep-sonuç grafiklerini inceleyip kendi günlerini ekleyebilirsin.
+            </span>
+            <button onClick={clearOnlyDemo} className="font-bold underline cursor-pointer">
+              Örnek Veriyi Temizle
             </button>
           </div>
         )}
 
-        {tab === 'correlations' && (
-          <div className="space-y-7">
-            {/* Editorial Narrative Lead */}
-            {leadInsight ? (
-              <section className="space-y-3 border-b border-[#2C2644] pb-6">
-                <h2 className="font-dusk-serif text-2xl sm:text-3xl leading-snug text-[#F3EEE6]">
-                  Son {sorted.length} günde <span className="text-[#F2C166]">{leadInsight.factorLabel}</span> olduğu günlerde{' '}
-                  <span className={leadInsight.direction === 'risk' ? 'text-[#FDA4AF]' : 'text-[#6EE7B7]'}>
-                    {leadInsight.outcomeLabel}
-                  </span>{' '}
-                  {leadInsight.impactText}.
-                </h2>
-                <p className="text-sm text-[#A69FB8] max-w-2xl">{leadInsight.detailText}</p>
-              </section>
-            ) : (
-              <div className="py-6 text-sm text-[#A69FB8]">Anlamlı korelasyon için en az 4 günlük kayıt ekleyin.</div>
-            )}
+        {/* KPI Bar */}
+        <section className="grid grid-cols-3 gap-3">
+          <div className="bg-white border border-slate-200 rounded-2xl p-3.5">
+            <div className="text-xs text-slate-500 flex items-center gap-1"><Moon className="w-3.5 h-3.5 text-[#2563EB]" /> Ort. Uyku</div>
+            <div className="font-ritim-mono text-2xl font-bold mt-1">{avgSleep} sa</div>
+          </div>
+          <div className="bg-white border border-slate-200 rounded-2xl p-3.5">
+            <div className="text-xs text-slate-500 flex items-center gap-1"><Activity className="w-3.5 h-3.5 text-[#0D9488]" /> Ort. Enerji</div>
+            <div className="font-ritim-mono text-2xl font-bold mt-1">{avgEnergy}/10</div>
+          </div>
+          <div className="bg-white border border-slate-200 rounded-2xl p-3.5">
+            <div className="text-xs text-slate-500">Baş Ağrısı</div>
+            <div className="font-ritim-mono text-2xl font-bold text-[#E11D48] mt-1">{headacheDays}/{sorted.length} gün</div>
+          </div>
+        </section>
 
-            {/* Horizontal Comparison Rows */}
-            <section className="divide-y divide-[#2C2644]">
-              {insights.map((ins) => (
-                <div key={ins.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`w-2 h-2 rounded-full ${ins.direction === 'risk' ? 'bg-[#FDA4AF]' : 'bg-[#6EE7B7]'}`}
-                      />
-                      <span className="font-semibold text-sm text-[#F3EEE6]">
-                        {ins.factorLabel} → {ins.outcomeLabel}
-                      </span>
-                    </div>
-                    <p className="text-xs text-[#A69FB8]">{ins.detailText}</p>
-                  </div>
-                  <div className="shrink-0 sm:text-right">
-                    <div
-                      className={`font-dusk-mono text-sm font-bold ${
-                        ins.direction === 'risk' ? 'text-[#FDA4AF]' : 'text-[#6EE7B7]'
+        {/* Navigation Tabs */}
+        <nav className="grid grid-cols-4 gap-1.5 bg-slate-200/70 p-1 rounded-xl">
+          {[
+            { id: 'correlations', label: 'Sebep & Sonuç', icon: Sparkles },
+            { id: 'log', label: '10 sn Kayıt', icon: Coffee },
+            { id: 'trends', label: '14 Gün Eğrisi', icon: TrendingUp },
+            { id: 'doctor', label: 'Hekim Özeti', icon: FileText },
+          ].map((item) => {
+            const Icon = item.icon;
+            const active = tab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setTab(item.id as Tab)}
+                className={`py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer ${
+                  active ? 'bg-white text-[#2563EB] shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="truncate">{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* TAB 1: CLEAR CAUSE-AND-EFFECT BARS */}
+        {tab === 'correlations' && (
+          <section className="grid md:grid-cols-2 gap-4">
+            {insights.length === 0 ? (
+              <div className="md:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 text-center text-sm text-slate-500">
+                Anlamlı sebep-sonuç analizi için en az 4 günlük kayıt ekleyin.
+              </div>
+            ) : (
+              insights.map((ins) => (
+                <article key={ins.id} className="bg-white border border-slate-200 rounded-2xl p-4 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span
+                      className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                        ins.direction === 'risk' ? 'bg-rose-100 text-[#E11D48]' : 'bg-teal-100 text-[#0D9488]'
                       }`}
                     >
+                      {ins.direction === 'risk' ? 'Tetikleyici Risk' : 'Koruyucu Alışkanlık'}
+                    </span>
+                    <span className="font-ritim-mono text-[11px] text-slate-500">{ins.confidence}</span>
+                  </div>
+
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm">
+                      {ins.factorLabel} → {ins.outcomeLabel}
+                    </h3>
+                    <div className={`text-base font-extrabold mt-0.5 ${ins.direction === 'risk' ? 'text-[#E11D48]' : 'text-[#0D9488]'}`}>
                       {ins.impactText}
                     </div>
-                    <div className="font-dusk-mono text-[10px] text-[#A69FB8]">{ins.confidence}</div>
                   </div>
-                </div>
-              ))}
-            </section>
-          </div>
+
+                  {/* Side-by-Side Visual Comparison Bars */}
+                  <div className="space-y-1.5 bg-slate-50 p-3 rounded-xl text-xs">
+                    <div>
+                      <div className="flex justify-between font-medium mb-1">
+                        <span>Etken Varken</span>
+                        <span className="font-ritim-mono font-bold">%{ins.rateWithPct}</span>
+                      </div>
+                      <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${ins.direction === 'risk' ? 'bg-[#E11D48]' : 'bg-[#0D9488]'}`}
+                          style={{ width: `${Math.min(100, ins.rateWithPct)}%` }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between font-medium mb-1 text-slate-600">
+                        <span>Etken Yokken</span>
+                        <span className="font-ritim-mono">%{ins.rateWithoutPct}</span>
+                      </div>
+                      <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-slate-400 rounded-full" style={{ width: `${Math.min(100, ins.rateWithoutPct)}%` }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2 text-xs text-slate-700 bg-blue-50/70 p-2.5 rounded-xl">
+                    <Lightbulb className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
+                    <span>{ins.actionTip}</span>
+                  </div>
+                </article>
+              ))
+            )}
+          </section>
         )}
 
+        {/* TAB 2: 10s LOG */}
         {tab === 'log' && (
-          <form onSubmit={handleSaveEntry} className="bg-[#1B1829] border border-[#2C2644] rounded-2xl p-5 space-y-5">
+          <form onSubmit={handleSaveEntry} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="font-dusk-serif text-xl font-bold">10 Saniyelik Gece/Gündüz Kaydı</h2>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="bg-[#12101B] border border-[#2C2644] rounded-lg px-3 py-1.5 text-xs font-dusk-mono text-[#F3EEE6]"
-              />
+              <h2 className="text-base font-extrabold">10 Saniyelik Günlük Kayıt</h2>
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-ritim-mono" />
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4 text-xs">
               <div>
-                <div className="flex justify-between mb-1"><span>Uyku</span><span className="font-dusk-mono text-[#F2C166]">{sleepHours.toFixed(1)} sa</span></div>
-                <input type="range" min={3} max={11} step={0.5} value={sleepHours} onChange={(e) => setSleepHours(Number(e.target.value))} className="w-full accent-[#F2C166]" />
+                <div className="flex justify-between font-bold mb-1"><span>Uyku Süresi</span><span className="text-[#2563EB]">{sleepHours.toFixed(1)} sa</span></div>
+                <input type="range" min={3} max={11} step={0.5} value={sleepHours} onChange={(e) => setSleepHours(Number(e.target.value))} className="w-full accent-[#2563EB]" />
               </div>
               <div>
-                <div className="flex justify-between mb-1"><span>Enerji</span><span className="font-dusk-mono text-[#6EE7B7]">{energy}/10</span></div>
-                <input type="range" min={1} max={10} value={energy} onChange={(e) => setEnergy(Number(e.target.value))} className="w-full accent-[#6EE7B7]" />
+                <div className="flex justify-between font-bold mb-1"><span>Günlük Enerji</span><span className="text-[#0D9488]">{energy}/10</span></div>
+                <input type="range" min={1} max={10} value={energy} onChange={(e) => setEnergy(Number(e.target.value))} className="w-full accent-[#0D9488]" />
               </div>
               <div>
-                <div className="flex justify-between mb-1"><span>Stres</span><span className="font-dusk-mono text-[#FDA4AF]">{stress}/10</span></div>
-                <input type="range" min={1} max={10} value={stress} onChange={(e) => setStress(Number(e.target.value))} className="w-full accent-[#FDA4AF]" />
+                <div className="flex justify-between font-bold mb-1"><span>Stres</span><span className="text-[#E11D48]">{stress}/10</span></div>
+                <input type="range" min={1} max={10} value={stress} onChange={(e) => setStress(Number(e.target.value))} className="w-full accent-[#E11D48]" />
               </div>
               <div>
-                <div className="flex justify-between mb-1"><span>Kafein</span><span className="font-dusk-mono text-[#F2C166]">{caffeineCups} fincan</span></div>
-                <input type="range" min={0} max={7} value={caffeineCups} onChange={(e) => setCaffeineCups(Number(e.target.value))} className="w-full accent-[#F2C166]" />
+                <div className="flex justify-between font-bold mb-1"><span>Kafein (Fincan)</span><span className="text-amber-600">{caffeineCups} fincan</span></div>
+                <input type="range" min={0} max={7} value={caffeineCups} onChange={(e) => setCaffeineCups(Number(e.target.value))} className="w-full accent-amber-600" />
               </div>
               <div>
-                <div className="flex justify-between mb-1"><span>Su</span><span className="font-dusk-mono text-[#93C5FD]">{waterGlasses} bardak</span></div>
-                <input type="range" min={1} max={14} value={waterGlasses} onChange={(e) => setWaterGlasses(Number(e.target.value))} className="w-full accent-[#93C5FD]" />
+                <div className="flex justify-between font-bold mb-1"><span>Su</span><span className="text-sky-600">{waterGlasses} bardak</span></div>
+                <input type="range" min={1} max={14} value={waterGlasses} onChange={(e) => setWaterGlasses(Number(e.target.value))} className="w-full accent-sky-600" />
               </div>
               <div>
-                <div className="flex justify-between mb-1"><span>Hareket</span><span className="font-dusk-mono text-[#6EE7B7]">{exerciseMin} dk</span></div>
-                <input type="range" min={0} max={90} step={5} value={exerciseMin} onChange={(e) => setExerciseMin(Number(e.target.value))} className="w-full accent-[#6EE7B7]" />
+                <div className="flex justify-between font-bold mb-1"><span>Yürüyüş / Egzersiz</span><span className="text-[#0D9488]">{exerciseMin} dk</span></div>
+                <input type="range" min={0} max={90} step={5} value={exerciseMin} onChange={(e) => setExerciseMin(Number(e.target.value))} className="w-full accent-[#0D9488]" />
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-3 text-xs">
-              <label className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#12101B] border border-[#2C2644] cursor-pointer">
+            <div className="flex flex-wrap gap-3 text-xs font-semibold">
+              <label className="flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 cursor-pointer">
                 <input type="checkbox" checked={lateCaffeine} onChange={(e) => setLateCaffeine(e.target.checked)} />
-                15:00 Sonrası Kafein
+                15:00 Sonrası Kafein İçtim
               </label>
-              <label className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#12101B] border border-[#2C2644] cursor-pointer">
+              <label className="flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 cursor-pointer">
                 <input type="checkbox" checked={screenBeforeBed} onChange={(e) => setScreenBeforeBed(e.target.checked)} />
-                Yatmadan Önce Ekran
+                Yatmadan Önce Ekran (30+ dk)
               </label>
             </div>
 
@@ -443,8 +450,8 @@ export default function App() {
                     type="button"
                     key={t}
                     onClick={() => toggleTag(t)}
-                    className={`px-3 py-1 rounded-full text-xs border cursor-pointer ${
-                      active ? 'bg-[#F2C166] text-[#12101B] border-[#F2C166] font-bold' : 'bg-[#12101B] text-[#A69FB8] border-[#2C2644]'
+                    className={`px-3 py-1 rounded-full text-xs font-semibold border cursor-pointer ${
+                      active ? 'bg-[#2563EB] text-white border-[#2563EB]' : 'bg-slate-50 text-slate-700 border-slate-200'
                     }`}
                   >
                     {t}
@@ -455,18 +462,16 @@ export default function App() {
 
             <div className="space-y-2">
               {SYMPTOM_META.map((s) => (
-                <div key={s.key} className="flex items-center justify-between gap-2 bg-[#12101B] px-3 py-2 rounded-xl text-xs">
-                  <span>{s.label}</span>
+                <div key={s.key} className="flex items-center justify-between gap-2 bg-slate-50 px-3 py-2 rounded-xl text-xs">
+                  <span className="font-medium">{s.label}</span>
                   <div className="flex gap-1">
                     {[0, 1, 2, 3].map((lvl) => (
                       <button
                         type="button"
                         key={lvl}
                         onClick={() => setSymptoms((prev) => ({ ...prev, [s.key]: lvl }))}
-                        className={`w-7 h-7 rounded-lg font-dusk-mono font-bold cursor-pointer ${
-                          symptoms[s.key] === lvl
-                            ? 'bg-[#F2C166] text-[#12101B]'
-                            : 'bg-[#1B1829] text-[#A69FB8] border border-[#2C2644]'
+                        className={`w-7 h-7 rounded-lg font-ritim-mono font-bold cursor-pointer ${
+                          symptoms[s.key] === lvl ? 'bg-[#2563EB] text-white' : 'bg-white border border-slate-200 text-slate-600'
                         }`}
                       >
                         {lvl}
@@ -478,48 +483,39 @@ export default function App() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="text"
-                placeholder="Kısa gözlem notu..."
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className="flex-1 bg-[#12101B] border border-[#2C2644] rounded-xl px-3.5 py-2.5 text-sm text-[#F3EEE6]"
-              />
-              <button type="submit" className="px-6 py-2.5 rounded-xl bg-[#F2C166] text-[#12101B] font-bold text-sm cursor-pointer">
-                Kaydet
-              </button>
+              <input type="text" placeholder="Kısa not..." value={note} onChange={(e) => setNote(e.target.value)} className="flex-1 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm" />
+              <button type="submit" className="px-6 py-2.5 rounded-xl bg-[#2563EB] text-white font-bold text-sm cursor-pointer">Kaydı Ekle</button>
             </div>
           </form>
         )}
 
+        {/* TAB 3: TRENDS */}
         {tab === 'trends' && (
-          <div className="space-y-5">
-            <div className="bg-[#1B1829] border border-[#2C2644] rounded-2xl p-4">
-              <h2 className="font-dusk-serif text-lg font-bold mb-3">14 Günlük Uyku &amp; Enerji Eğrisi</h2>
+          <div className="space-y-4">
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 overflow-x-auto">
+              <h2 className="text-sm font-extrabold mb-3">14 Günlük Uyku &amp; Enerji Trendi</h2>
               {sorted.length > 0 && (
-                <div className="overflow-x-auto">
-                  <svg viewBox="0 0 640 200" className="w-full min-w-[460px] h-44">
-                    <line x1="30" y1="170" x2="620" y2="170" stroke="#2C2644" strokeWidth="1" />
-                    {(() => {
-                      const slice = sorted.slice(-14);
-                      const stepX = slice.length > 1 ? 570 / (slice.length - 1) : 0;
-                      const energyPts = slice.map((e, i) => `${30 + i * stepX},${170 - (e.energy / 10) * 140}`).join(' ');
-                      const sleepPts = slice.map((e, i) => `${30 + i * stepX},${170 - (Math.min(10, e.sleepHours) / 10) * 140}`).join(' ');
-                      return (
-                        <>
-                          <polyline fill="none" stroke="#6EE7B7" strokeWidth="3" points={energyPts} />
-                          <polyline fill="none" stroke="#F2C166" strokeWidth="2.5" strokeDasharray="5 4" points={sleepPts} />
-                        </>
-                      );
-                    })()}
-                  </svg>
-                </div>
+                <svg viewBox="0 0 640 200" className="w-full min-w-[460px] h-44">
+                  <line x1="30" y1="170" x2="620" y2="170" stroke="#CBD5E1" strokeWidth="1" />
+                  {(() => {
+                    const slice = sorted.slice(-14);
+                    const stepX = slice.length > 1 ? 570 / (slice.length - 1) : 0;
+                    const energyPts = slice.map((e, i) => `${30 + i * stepX},${170 - (e.energy / 10) * 140}`).join(' ');
+                    const sleepPts = slice.map((e, i) => `${30 + i * stepX},${170 - (Math.min(10, e.sleepHours) / 10) * 140}`).join(' ');
+                    return (
+                      <>
+                        <polyline fill="none" stroke="#2563EB" strokeWidth="3" points={energyPts} />
+                        <polyline fill="none" stroke="#0D9488" strokeWidth="2.5" strokeDasharray="5 4" points={sleepPts} />
+                      </>
+                    );
+                  })()}
+                </svg>
               )}
             </div>
-            <div className="bg-[#1B1829] border border-[#2C2644] rounded-2xl p-4 overflow-x-auto">
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-left text-[#A69FB8] border-b border-[#2C2644]">
+                  <tr className="text-left text-slate-500 border-b">
                     <th className="py-2 pr-2">Tarih</th>
                     <th className="py-2 px-1">Uyku</th>
                     <th className="py-2 px-1">Enerji</th>
@@ -530,13 +526,13 @@ export default function App() {
                 </thead>
                 <tbody>
                   {[...sorted].reverse().slice(0, 14).map((e) => (
-                    <tr key={e.id} className="border-b border-[#2C2644]/50">
-                      <td className="py-2 pr-2 font-dusk-mono">{e.date.slice(5)}</td>
-                      <td className="py-2 px-1 font-dusk-mono">{e.sleepHours}s</td>
-                      <td className="py-2 px-1 font-dusk-mono text-[#6EE7B7]">{e.energy}</td>
+                    <tr key={e.id} className="border-b border-slate-100">
+                      <td className="py-2 pr-2 font-ritim-mono">{e.date.slice(5)}</td>
+                      <td className="py-2 px-1 font-ritim-mono">{e.sleepHours}s</td>
+                      <td className="py-2 px-1 font-ritim-mono font-bold text-[#2563EB]">{e.energy}</td>
                       {SYMPTOM_META.map((s) => (
-                        <td key={s.key} className="py-1.5 px-1 text-center font-dusk-mono">
-                          <span className={`inline-block w-6 py-0.5 rounded ${e.symptoms[s.key] >= 2 ? 'bg-[#FDA4AF]/20 text-[#FDA4AF]' : 'text-[#A69FB8]'}`}>
+                        <td key={s.key} className="py-1.5 px-1 text-center font-ritim-mono">
+                          <span className={`inline-block w-6 py-0.5 rounded font-bold ${e.symptoms[s.key] >= 2 ? 'bg-rose-100 text-[#E11D48]' : 'text-slate-600'}`}>
                             {e.symptoms[s.key]}
                           </span>
                         </td>
@@ -549,73 +545,54 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB 4: DOCTOR */}
         {tab === 'doctor' && (
-          <section className="bg-[#1B1829] border border-[#2C2644] rounded-2xl p-5 space-y-4">
+          <section className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="font-dusk-serif text-xl font-bold">Hekim Görüşme Özeti</h2>
+              <h2 className="text-base font-extrabold">Hekim Görüşme Özeti</h2>
               <button
                 onClick={() => {
                   navigator.clipboard?.writeText(doctorSummary);
                   setCopiedDoctor(true);
                   setTimeout(() => setCopiedDoctor(false), 2000);
                 }}
-                className="px-3.5 py-2 rounded-xl bg-[#F2C166] text-[#12101B] text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
               >
                 {copiedDoctor ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copiedDoctor ? 'Kopyalandı' : 'Özeti Kopyala'}
               </button>
             </div>
-            <pre className="bg-[#12101B] border border-[#2C2644] rounded-xl p-4 text-xs whitespace-pre-wrap font-dusk-mono text-[#E7EFEA]">
+            <pre className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs whitespace-pre-wrap font-ritim-mono text-slate-800">
               {doctorSummary}
             </pre>
           </section>
         )}
 
-        <footer className="pt-4 border-t border-[#2C2644] text-xs text-[#A69FB8] flex items-start gap-2">
-          <AlertTriangle className="w-4 h-4 text-[#F2C166] shrink-0 mt-0.5" />
+        <footer className="border-t border-slate-200 pt-4 text-xs text-slate-500 flex items-start gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <p>RitimGünlüğü tıbbi tanı koymaz; verileriniz yalnızca kendi cihazınızda saklanır.</p>
         </footer>
       </main>
 
-      {/* Mobile Floating Translucent Dock */}
-      <nav className="lg:hidden fixed bottom-3 left-3 right-3 z-40 rounded-2xl border border-[#2C2644] bg-[#1B1829]/95 backdrop-blur-md p-1.5 grid grid-cols-4 gap-1 shadow-2xl">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = tab === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => setTab(item.id)}
-              className={`py-2 rounded-xl text-[11px] font-semibold flex flex-col items-center gap-1 cursor-pointer ${
-                active ? 'bg-[#2A2442] text-[#F2C166]' : 'text-[#A69FB8]'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </nav>
-
       {kvkkOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-          <div className="bg-[#1B1829] border border-[#2C2644] rounded-2xl max-w-md w-full p-5 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between">
-              <h3 className="font-dusk-serif text-lg font-bold">KVKK &amp; Veri Kontrolü</h3>
-              <button onClick={() => setKvkkOpen(false)} className="p-1 text-[#A69FB8] cursor-pointer"><X className="w-5 h-5" /></button>
+              <h3 className="text-base font-extrabold">KVKK &amp; Veri Kontrolü</h3>
+              <button onClick={() => setKvkkOpen(false)} className="p-1 text-slate-500 cursor-pointer"><X className="w-5 h-5" /></button>
             </div>
             <div className="space-y-2">
-              <button onClick={exportJson} className="w-full py-2.5 px-4 rounded-xl bg-[#12101B] border border-[#2C2644] text-xs font-bold flex items-center justify-center gap-2 cursor-pointer">
+              <button onClick={exportJson} className="w-full py-2.5 px-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer">
                 <Download className="w-4 h-4" /> JSON Yedeğini İndir ({entries.length} gün)
               </button>
-              <label className="w-full py-2.5 px-4 rounded-xl bg-[#12101B] border border-[#2C2644] text-xs font-bold flex items-center justify-center gap-2 cursor-pointer">
+              <label className="w-full py-2.5 px-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer">
                 <Upload className="w-4 h-4" /> JSON Yedeğinden Geri Yükle
                 <input type="file" accept="application/json" className="hidden" onChange={importJson} />
               </label>
               <button
                 onClick={wipeAll}
                 className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 cursor-pointer ${
-                  deleteStep === 1 ? 'bg-rose-600 text-white' : 'bg-rose-950/50 text-rose-300 border border-rose-800'
+                  deleteStep === 1 ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-700 border border-rose-200'
                 }`}
               >
                 <Trash2 className="w-4 h-4" />

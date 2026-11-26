@@ -7,6 +7,9 @@ export interface CorrelationInsight {
   direction: 'risk' | 'protective';
   impactText: string;
   detailText: string;
+  actionTip: string;
+  rateWithPct: number;
+  rateWithoutPct: number;
   confidence: 'Yüksek Kanıt' | 'Orta Kanıt' | 'Ön Sinyal';
   score: number;
 }
@@ -15,6 +18,15 @@ function avg(nums: number[]): number {
   if (!nums.length) return 0;
   return nums.reduce((a, b) => a + b, 0) / nums.length;
 }
+
+const ACTION_TIPS: Record<string, string> = {
+  'late-caf': 'Kafeini saat 14:30’dan önce kesip öğleden sonra bitki çayı veya suya geçmeyi dene.',
+  'short-sleep': 'Yatış saatini 45 dakika öne çekmek ertesi günkü odak ve ağrı riskini hızla düşürür.',
+  'high-caf': 'Günlük kahve sayısını 2 fincanla sınırlayıp her kahve yanında 1 bardak su iç.',
+  'screen-bed': 'Uyumadan 30 dk önce telefonu şarja bırakmak derin uyku kalitesini belirgin artırır.',
+  'low-water': 'Masanda 1 litrelik şişe bulundurmak susuzluk kaynaklı baş ağrısını azaltır.',
+  walk: 'Günde 20–30 dakikalık tempolu yürüyüş enerji puanını ve uyku derinliğini koruyor.',
+};
 
 export function computeCorrelations(entries: RhythmEntry[]): CorrelationInsight[] {
   if (entries.length < 4) return [];
@@ -31,9 +43,9 @@ export function computeCorrelations(entries: RhythmEntry[]): CorrelationInsight[
     const withoutF = entries.filter((e) => !predicate(e));
     if (withF.length < 2 || withoutF.length < 2) return;
 
-    const rateWith = (withF.filter((e) => e.symptoms[symptomKey] >= 1).length / withF.length) * 100;
-    const rateWithout = (withoutF.filter((e) => e.symptoms[symptomKey] >= 1).length / withoutF.length) * 100;
-    const diff = Math.round(rateWith - rateWithout);
+    const rateWith = Math.round((withF.filter((e) => e.symptoms[symptomKey] >= 1).length / withF.length) * 100);
+    const rateWithout = Math.round((withoutF.filter((e) => e.symptoms[symptomKey] >= 1).length / withoutF.length) * 100);
+    const diff = rateWith - rateWithout;
     if (Math.abs(diff) < 20) return;
 
     const confidence: CorrelationInsight['confidence'] =
@@ -49,27 +61,30 @@ export function computeCorrelations(entries: RhythmEntry[]): CorrelationInsight[
       outcomeLabel: symptomLabel,
       direction: diff > 0 ? 'risk' : 'protective',
       impactText: diff > 0 ? `+%${diff} daha sık görülüyor` : `%${Math.abs(diff)} daha az görülüyor`,
-      detailText: `Bu etkenin olduğu ${withF.length} günün %${Math.round(rateWith)}'ında görüldü (olmadığı günlerde %${Math.round(rateWithout)}).`,
+      detailText: `Bu alışkanlığın olduğu ${withF.length} günün %${rateWith}'ında görüldü (olmadığı günlerde %${rateWithout}).`,
+      actionTip: ACTION_TIPS[id] || 'Bu etkeni 7 gün daha takip ederek etkinin tutarlılığını doğrula.',
+      rateWithPct: rateWith,
+      rateWithoutPct: rateWithout,
       confidence,
       score: Math.abs(diff),
     });
   };
 
-  // Core physiological factors vs symptoms
   for (const s of SYMPTOM_META) {
     checkBinaryFactor('late-caf', '15:00 Sonrası Kafein', (e) => e.lateCaffeine, s.key, s.label);
     checkBinaryFactor('short-sleep', '6.5 Saatten Az Uyku', (e) => e.sleepHours < 6.5, s.key, s.label);
     checkBinaryFactor('high-caf', '3+ Fincan Kafein', (e) => e.caffeineCups >= 3, s.key, s.label);
     checkBinaryFactor('screen-bed', 'Yatmadan Önce Ekran', (e) => e.screenBeforeBed, s.key, s.label);
     checkBinaryFactor('low-water', 'Az Su (< 6 Bardak)', (e) => e.waterGlasses < 6, s.key, s.label);
-    checkBinaryFactor('walk', '20+ dk Egzersiz / Yürüyüş', (e) => e.exerciseMin >= 20, s.key, s.label);
+    checkBinaryFactor('walk', '20+ dk Yürüyüş / Hareket', (e) => e.exerciseMin >= 20, s.key, s.label);
   }
 
-  // Energy boost from exercise & good sleep
   const activeDays = entries.filter((e) => e.exerciseMin >= 20);
   const inactiveDays = entries.filter((e) => e.exerciseMin < 20);
   if (activeDays.length >= 2 && inactiveDays.length >= 2) {
-    const delta = avg(activeDays.map((e) => e.energy)) - avg(inactiveDays.map((e) => e.energy));
+    const avgWith = avg(activeDays.map((e) => e.energy));
+    const avgWithout = avg(inactiveDays.map((e) => e.energy));
+    const delta = avgWith - avgWithout;
     if (delta >= 1.0) {
       insights.push({
         id: 'exercise-energy',
@@ -77,14 +92,16 @@ export function computeCorrelations(entries: RhythmEntry[]): CorrelationInsight[
         outcomeLabel: 'Günlük Enerji Puanı',
         direction: 'protective',
         impactText: `+${delta.toFixed(1)} puan daha yüksek enerji`,
-        detailText: `Hareket ettiğin ${activeDays.length} günde ortalama enerji ${avg(activeDays.map((e) => e.energy)).toFixed(1)}/10 (diğer günlerde ${avg(inactiveDays.map((e) => e.energy)).toFixed(1)}/10).`,
+        detailText: `Hareket ettiğin ${activeDays.length} günde ortalama enerji ${avgWith.toFixed(1)}/10 (diğer günlerde ${avgWithout.toFixed(1)}/10).`,
+        actionTip: ACTION_TIPS.walk,
+        rateWithPct: Math.round(avgWith * 10),
+        rateWithoutPct: Math.round(avgWithout * 10),
         confidence: entries.length >= 10 ? 'Yüksek Kanıt' : 'Orta Kanıt',
         score: Math.round(delta * 18),
       });
     }
   }
 
-  // Deduplicate keeping strongest insights
   return insights.sort((a, b) => b.score - a.score).slice(0, 6);
 }
 
@@ -97,7 +114,7 @@ export function buildDoctorSummary(entries: RhythmEntry[]): string {
   const severeHeadache = sorted.filter((e) => e.symptoms.headache >= 2).length;
   const topInsights = computeCorrelations(sorted).slice(0, 3);
 
-  const lines = [
+  return [
     `RitimGünlüğü Hekim / Uzman Görüşme Özeti`,
     `Tarih Aralığı: ${sorted[0].date} — ${sorted[sorted.length - 1].date} (${sorted.length} gün)`,
     `Ortalama Uyku: ${avgSleep} saat | Ortalama Enerji: ${avgEnergy}/10`,
@@ -106,7 +123,6 @@ export function buildDoctorSummary(entries: RhythmEntry[]): string {
     'Öne Çıkan Kişisel Korelasyonlar:',
     ...(topInsights.length
       ? topInsights.map((i, idx) => `${idx + 1}. ${i.factorLabel} -> ${i.outcomeLabel}: ${i.impactText}`)
-      : ['- Henüz yeterli veri birikmedi (en az 4-7 gün önerilir).']),
-  ];
-  return lines.join('\n');
+      : ['- Henüz yeterli veri birikmedi (en az 4 gün önerilir).']),
+  ].join('\n');
 }

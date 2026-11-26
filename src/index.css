@@ -1,55 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --bg-dusk: #12101b;
-  --bg-velvet: #1b1829;
-  --border-plum: #2c2644;
-  --ink-cream: #f3eee6;
-  --ink-mist: #a69fb8;
-  --accent-candle: #f2c166;
-  --accent-mint: #6ee7b7;
-  --accent-coral: #fda4af;
-  --font-serif: "Fraunces", Georgia, serif;
+  --bg-daylight: #f6f9fc;
+  --bg-card: #ffffff;
+  --ink-navy: #0f172a;
+  --accent-cobalt: #2563eb;
+  --accent-teal: #0d9488;
+  --accent-rose: #e11d48;
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-dusk);
-  color: var(--ink-cream);
+  background-color: var(--bg-daylight);
+  color: var(--ink-navy);
 }
 
-.font-dusk-serif {
-  font-family: var(--font-serif);
-  text-wrap: balance;
-}
-
-.font-dusk-mono {
+.font-ritim-mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
 ::selection {
-  background: rgba(242, 193, 102, 0.25);
-  color: #ffffff;
+  background: rgba(37, 99, 235, 0.18);
+  color: #0f172a;
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-candle);
+  outline: 2px solid var(--accent-cobalt);
   outline-offset: 2px;
-}
-
-::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-}
-::-webkit-scrollbar-track {
-  background: #12101b;
-}
-::-webkit-scrollbar-thumb {
-  background: #2c2644;
-  border-radius: 999px;
 }
 
 @media (prefers-reduced-motion: reduce) {
